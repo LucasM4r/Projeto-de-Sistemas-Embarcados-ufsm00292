@@ -154,6 +154,10 @@ bool receiverFiniteStateMachine() {
     return sm.action[sm.state](input_byte);
 }
 
+bool receiveByte() {
+    return receiverFiniteStateMachine();
+}
+
 bool receiveMessage(unsigned char** output_data, int* output_size) {
     receiverReset();
 
