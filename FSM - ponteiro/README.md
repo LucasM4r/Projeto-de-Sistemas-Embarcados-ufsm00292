@@ -18,4 +18,4 @@ formato:
 de estados, tanto do transmissor quanto do receptor.
 
 Faça a implementação em linguagem C, usando a diretiva
-switch.
+ponteiro.
