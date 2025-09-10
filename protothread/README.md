@@ -13,9 +13,13 @@ formato:
 | **CHK**    | 1 Byte     | Checksum da transmissão          |                          |
 | **ETX**    | 1 Byte     | Fim da transmissão               | 0x03                     |
 
-1) Desenhe um diagrama de funcionamento do sistema.
-2) Implemente o tratamento do protocolo usando máquina
-de estados, tanto do transmissor quanto do receptor.
+No projeto do sistema embarcado deve haver duas
+protothreads. A transmissora, que envia dados
+usando o protocolo especificado; e a receptora, que
+recebe os dados e interpreta o protocolo.
+Se os dados estiverem corretos e no formato correto, a
+receptora envia uma confirmação (ACK) para a
+transmissora. Em caso de erro, a transmissora reenvia
+os dados após um tempo máximo de espera.
 
-Faça a implementação em linguagem C, usando a diretiva
-switch.
+Faça a implementação em linguagem C, usando protothread.
