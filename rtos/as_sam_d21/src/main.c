@@ -40,6 +40,7 @@ void tarefa_5(void);
 void tarefa_6(void);
 void tarefa_7(void);
 void tarefa_8(void);
+void tarefa_9(void);
 
 /*
  * Configuracao dos tamanhos das pilhas
@@ -52,6 +53,7 @@ void tarefa_8(void);
 #define TAM_PILHA_6			(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_7			(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_8			(TAM_MINIMO_PILHA + 24)
+#define TAM_PILHA_9			(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_OCIOSA	(TAM_MINIMO_PILHA + 24)
 
 /*
@@ -65,6 +67,7 @@ uint32_t PILHA_TAREFA_5[TAM_PILHA_5];
 uint32_t PILHA_TAREFA_6[TAM_PILHA_6];
 uint32_t PILHA_TAREFA_7[TAM_PILHA_7];
 uint32_t PILHA_TAREFA_8[TAM_PILHA_8];
+uint32_t PILHA_TAREFA_9[TAM_PILHA_9];
 uint32_t PILHA_TAREFA_OCIOSA[TAM_PILHA_OCIOSA];
 
 /*
@@ -84,6 +87,7 @@ int main(void)
 	
 	CriaTarefa(tarefa_2, "Tarefa 2", PILHA_TAREFA_2, TAM_PILHA_2, 1);
 	
+	CriaTarefa(tarefa_9, "Monitor", PILHA_TAREFA_9, TAM_PILHA_9, 3);
 	/* Cria tarefa ociosa do sistema */
 	CriaTarefa(tarefa_ociosa,"Tarefa ociosa", PILHA_TAREFA_OCIOSA, TAM_PILHA_OCIOSA, 0);
 	
@@ -245,4 +249,37 @@ void tarefa_8(void)
 		
 		SemaforoLibera(&SemaforoVazio);
 	}
+}
+
+/* Tarefa 9 - Logger do sistema */
+void tarefa_9(void) {
+    static uint32_t ciclo = 0;
+
+    for(;;) {
+        ciclo++;
+
+        /* log periódico do buffer compartilhado */
+        if (ciclo % 200 == 0) {
+            printf("Logger: Estado do buffer = [ ");
+            for (uint8_t i = 0; i < TAM_BUFFER; i++) {
+                printf("%d ", buffer[i]);
+            }
+            printf("]\r\n");
+        }
+
+        /* log do estado dos semáforos */
+        if (ciclo % 500 == 0) {
+            printf("Logger: SemaforoCheio = %d, SemaforoVazio = %d\r\n",
+                   SemaforoCheio.contador, SemaforoVazio.contador);
+        }
+
+        /* Heartbeat no LED */
+        if (ciclo % 20 == 0) {
+            #ifdef LED_0_PIN
+            port_pin_toggle_output_level(LED_0_PIN);
+            #endif
+        }
+
+        TarefaEspera(50); // Executa a cada 50ms
+    }
 }
