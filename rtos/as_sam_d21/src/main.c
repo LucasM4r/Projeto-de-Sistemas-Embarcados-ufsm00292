@@ -41,7 +41,8 @@ void tarefa_6(void);
 void tarefa_7(void);
 void tarefa_8(void);
 void tarefa_9(void);
-
+void tarefa_10(void);
+void tarefa_11(void);
 /*
  * Configuracao dos tamanhos das pilhas
  */
@@ -54,6 +55,8 @@ void tarefa_9(void);
 #define TAM_PILHA_7			(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_8			(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_9			(TAM_MINIMO_PILHA + 24)
+#define TAM_PILHA_10		(TAM_MINIMO_PILHA + 24)
+#define TAM_PILHA_11		(TAM_MINIMO_PILHA + 24)
 #define TAM_PILHA_OCIOSA	(TAM_MINIMO_PILHA + 24)
 
 /*
@@ -68,6 +71,8 @@ uint32_t PILHA_TAREFA_6[TAM_PILHA_6];
 uint32_t PILHA_TAREFA_7[TAM_PILHA_7];
 uint32_t PILHA_TAREFA_8[TAM_PILHA_8];
 uint32_t PILHA_TAREFA_9[TAM_PILHA_9];
+uint32_t PILHA_TAREFA_10[TAM_PILHA_10];
+uint32_t PILHA_TAREFA_11[TAM_PILHA_11];
 uint32_t PILHA_TAREFA_OCIOSA[TAM_PILHA_OCIOSA];
 
 /*
@@ -88,6 +93,10 @@ int main(void)
 	CriaTarefa(tarefa_2, "Tarefa 2", PILHA_TAREFA_2, TAM_PILHA_2, 1);
 	
 	CriaTarefa(tarefa_9, "Monitor", PILHA_TAREFA_9, TAM_PILHA_9, 3);
+
+	CriaTarefa(tarefa_10, "Tarefa 10", PILHA_TAREFA_10, TAM_PILHA_10, 2);
+
+	CriaTarefa(tarefa_11, "Tarefa 11", PILHA_TAREFA_11, TAM_PILHA_11, 1);
 	/* Cria tarefa ociosa do sistema */
 	CriaTarefa(tarefa_ociosa,"Tarefa ociosa", PILHA_TAREFA_OCIOSA, TAM_PILHA_OCIOSA, 0);
 	
@@ -283,3 +292,59 @@ void tarefa_9(void) {
         TarefaEspera(50); // Executa a cada 50ms
     }
 }
+
+
+/* Tarefa 10: Cooperativa */
+void tarefa_10(void)
+{
+    static uint32_t contador = 0;
+    static uint32_t produto = 1;
+
+    for(;;)
+    {
+        contador++;
+
+        for(uint32_t i = 1; i <= 20; i++) {
+            produto = (produto * i) % 100000; 
+        }
+
+        printf("Tarefa 10 (Cooperativa) executando, contador = %lu, produto = %lu\r\n", contador, produto);
+
+		TarefaEspera(100); // Espera 100ms
+        
+    }
+}
+
+/*
+Só libera a cpu quando chama TarefaEspera(100)
+Nenhuma outra tarefa roda durante o loop
+Se você aumentar o “trabalho” dentro do loop, 
+as tarefas de menor prioridade podem não executar
+até a cooperativa liberar a CPU.
+*/
+
+/* Tarefa 11: Preemptiva */
+void tarefa_11(void)
+{
+    static uint32_t contador = 0;
+    static uint32_t produto = 1;
+
+    for(;;)
+    {
+        contador++;
+
+        for(uint32_t i = 1; i <= 20; i++) {
+            produto = (produto * i) % 100000; 
+        }
+
+        printf("Tarefa 11 (Preemptiva) executando, contador = %lu, produto = %lu\r\n", contador, produto);
+
+    }
+}
+/*
+O kernel interrompe a tarefa automaticamente 
+para rodar tarefas de maior prioridade.
+Mesmo durante o loop de multiplicação, 
+se houver uma tarefa pronta com prioridade maior, ela será executada.
+
+*/

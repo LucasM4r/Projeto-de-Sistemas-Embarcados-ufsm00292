@@ -358,7 +358,7 @@
         <targetDevice>ATSAMD21J18A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>Simulator</platformTool>
         <languageToolchain>ARM</languageToolchain>
         <languageToolchainVersion>10.3.1</languageToolchainVersion>
         <platform>3</platform>
